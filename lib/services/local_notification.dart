@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 
 class LocalNotification {
   /// Trigger Notification
@@ -40,5 +41,28 @@ class LocalNotification {
   /// Cancel Scheduled Notification
   static cancelScheduledNotification(int id) async {
     await AwesomeNotifications().cancelSchedule(id);
+  }
+
+  /// Action Button Notification
+  static showNotificationWithActionButton(int id) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: id,
+          channelKey: 'basic_channel',
+          title: 'Anonymous says:',
+          body: 'Hi there!',
+        ),
+        actionButtons: [
+          NotificationActionButton(
+              key: 'READ',
+              label: 'Mark as read',
+              autoDismissible: true,
+              requireInputText: true),
+          NotificationActionButton(
+              key: 'DISMISS',
+              label: 'Dismiss',
+              actionType: ActionType.Default,
+              color: Colors.redAccent),
+        ]);
   }
 }

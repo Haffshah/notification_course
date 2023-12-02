@@ -75,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 LocalNotification.cancelScheduledNotification(0);
               },
               child: const Text('Cancel Schedule Notification')),
+
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.showNotificationWithActionButton(1);
+              },
+              child: const Text('Action Button Notification')),
         ],
       ),
     );
