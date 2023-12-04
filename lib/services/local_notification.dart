@@ -1,5 +1,13 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:notification_course/constant/app_constant.dart';
+
+/// Create Unique id
+int createUniqueId(int maxValue) {
+  Random random = Random();
+  return random.nextInt(maxValue);
+}
 
 class LocalNotification {
   /// Trigger Notification
@@ -7,7 +15,7 @@ class LocalNotification {
     AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: 0,
-            channelKey: 'basic_channel',
+            channelKey: notificationChannelKey,
             title: 'New Notification',
             body: 'New charging slot found on speaker.',
             bigPicture:
@@ -20,7 +28,7 @@ class LocalNotification {
     AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: 0,
-            channelKey: 'basic_channel',
+            channelKey: notificationChannelKey,
             title: 'Scheduled Notification',
             body: 'New charging slot found on speaker.',
             bigPicture:
@@ -48,21 +56,32 @@ class LocalNotification {
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: id,
-          channelKey: 'basic_channel',
+          channelKey: notificationChannelKey,
           title: 'Anonymous says:',
           body: 'Hi there!',
         ),
         actionButtons: [
           NotificationActionButton(
-              key: 'READ',
-              label: 'Mark as read',
+              key: 'SUBSCRIBE',
+              label: 'Subscribe',
               autoDismissible: true,
-              requireInputText: true),
+              isDangerousOption: true),
           NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.Default,
-              color: Colors.redAccent),
+            key: 'DISMISS',
+            label: 'Dismiss',
+            actionType: ActionType.Default,
+          ),
         ]);
+  }
+
+  /// Create Basic Notification With Payload
+  static Future<void> createBasicNotificationWithPayload() async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: 1,
+            channelKey: notificationChannelKey,
+            title: 'This is Notification With Payload',
+            body: 'Press on notification to check...',
+            payload: {'screen_name': 'HOME_SCREEN'}));
   }
 }

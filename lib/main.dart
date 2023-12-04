@@ -6,17 +6,23 @@ import 'package:notification_course/services/notification_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationController.initializeLocalNotification(debug: true);
+  await NotificationController.getStartedWithNotification();
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  /// Global NavigatorKey
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -75,15 +81,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 LocalNotification.cancelScheduledNotification(0);
               },
               child: const Text('Cancel Schedule Notification')),
-
           ElevatedButton(
               onPressed: () {
                 LocalNotification.showNotificationWithActionButton(1);
               },
               child: const Text('Action Button Notification')),
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.createBasicNotificationWithPayload();
+              },
+              child: const Text('Basic Notification With Payload')),
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.createBasicNotificationWithPayload();
+              },
+              child: const Text('Chat Notification')),
         ],
       ),
     );
   }
-
 }
