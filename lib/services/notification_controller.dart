@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notification_course/constant/app_constant.dart';
 import 'package:notification_course/main.dart';
 import 'package:notification_course/screens/home_screen.dart';
+import 'package:notification_course/services/local_notification.dart';
 
 /// Navigation
 navigationAction(ReceivedAction receivedAction) {
@@ -52,6 +53,8 @@ class NotificationController with ChangeNotifier {
             playSound: true,
             soundSource: 'resource://raw/naruto_jutsu',
           ),
+
+          /// Chat Channel
           NotificationChannel(
               channelGroupKey: chatChannelKey,
               channelKey: chatChannelKey,
@@ -91,6 +94,9 @@ class NotificationController with ChangeNotifier {
     // } else if (receivedAction.buttonKeyPressed == 'DISMISS') {
     //   debugPrint('Dismiss Pressed');
     // }
+    if (receivedAction.channelKey == chatChannelKey) {
+      receiveChatNotificationAction(receivedAction);
+    }
     Fluttertoast.showToast(
         msg:
             '${isSilentAction ? 'Silent action' : 'Action'} Notification Received',
@@ -144,6 +150,21 @@ class NotificationController with ChangeNotifier {
       return;
     } else {
       navigationAction(receivedAction);
+    }
+  }
+
+  /// Receive Chat Notification Action
+  static Future<void> receiveChatNotificationAction(
+      ReceivedAction receivedAction) async {
+    if (receivedAction.buttonKeyPressed == 'REPLY') {
+      await LocalNotification.createMessagingNotification(
+          channelKey: chatChannelKey,
+          groupKey: receivedAction.groupKey!,
+          chatName: receivedAction.summary!,
+          userName: 'you',
+          message: receivedAction.buttonKeyInput,
+          profileIcon:
+              'https://unsplash.com/photos/a-silhouette-of-a-man-standing-in-front-of-a-sunset-4tprl35EsVs');
     }
   }
 }

@@ -84,4 +84,35 @@ class LocalNotification {
             body: 'Press on notification to check...',
             payload: {'screen_name': 'HOME_SCREEN'}));
   }
+
+  /// Create Messaging Notification
+  static Future<void> createMessagingNotification({
+    required String channelKey,
+    required String groupKey,
+    required String chatName,
+    required String userName,
+    required String message,
+    String? profileIcon,
+  }) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: createUniqueId(AwesomeNotifications.maxID),
+            groupKey: groupKey,
+            channelKey: channelKey,
+            summary: chatName,
+            title: userName,
+            body: message,
+            largeIcon: profileIcon,
+            notificationLayout: NotificationLayout.MessagingGroup,
+            category: NotificationCategory.Message),
+        actionButtons: [
+          NotificationActionButton(
+              key: 'REPLY',
+              label: 'Reply',
+              requireInputText: true,
+              autoDismissible: false),
+          NotificationActionButton(
+              key: 'READ', label: 'Mark as Read', autoDismissible: true),
+        ]);
+  }
 }

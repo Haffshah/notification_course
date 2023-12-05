@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:notification_course/constant/app_constant.dart';
 import 'package:notification_course/services/local_notification.dart';
 import 'package:notification_course/services/notification_controller.dart';
 
@@ -93,7 +94,15 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Basic Notification With Payload')),
           ElevatedButton(
               onPressed: () {
-                LocalNotification.createBasicNotificationWithPayload();
+                LocalNotification.createMessagingNotification(
+                  channelKey: chatChannelKey,
+                  groupKey: 'Harsh_shah',
+                  chatName: 'Hera Pheri Group',
+                  userName: 'Harsh',
+                  message: 'Manthan has send a message',
+                  profileIcon:
+                      'https://unsplash.com/photos/a-man-running-up-a-mountain-with-a-sky-background-gj7WgSOIIu4',
+                );
               },
               child: const Text('Chat Notification')),
         ],
