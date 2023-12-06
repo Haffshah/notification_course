@@ -208,18 +208,14 @@ class LocalNotification {
     ));
   }
 
-
-
   /// Wakeup Notification will Wake up Lock Screen
-  static Future<void> showWakeUpNotification(int id) async{
-    await AwesomeNotifications().createNotification(content: NotificationContent(
-      id: id,
-      channelKey: notificationChannelKey,
-      title:
-      'Wakeup Notification',
-      body: 'Wakeup you lazy boy!',
-      wakeUpScreen: true
-    ));
-
+  static Future<void> showWakeUpNotification(int id) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: id,
+            channelKey: notificationChannelKey,
+            title: 'Wakeup Notification',
+            body: 'Wakeup you lazy boy!',
+            wakeUpScreen: true));
   }
 }

@@ -1,9 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:notification_course/constant/app_constant.dart';
-import 'package:notification_course/services/local_notification.dart';
+import 'package:notification_course/screens/local_notification_screen.dart';
 import 'package:notification_course/services/notification_controller.dart';
+import 'package:notification_course/screens/remote_notification_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Awesome Notifications'),
     );
   }
 }
@@ -53,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AwesomeNotifications().requestPermissionToSendNotifications();
         }
       });
+      NotificationController.requestFirebaseToken();
     });
   }
 
@@ -64,72 +64,32 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('Home Screen'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          /// Local Notification
           ElevatedButton(
               onPressed: () {
-                LocalNotification.triggerNotification();
+                MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+                    builder: (_) => const LocalNotificationScreen()));
               },
-              child: const Text('Trigger Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.scheduleNotification();
-              },
-              child: const Text('Schedule Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.cancelScheduledNotification(0);
-              },
-              child: const Text('Cancel Schedule Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.showNotificationWithActionButton(1);
-              },
-              child: const Text('Action Button Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.createBasicNotificationWithPayload();
-              },
-              child: const Text('Basic Notification With Payload')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.createMessagingNotification(
-                  channelKey: chatChannelKey,
-                  groupKey: 'Harsh_shah',
-                  chatName: 'Hera Pheri Group',
-                  userName: 'Harsh',
-                  message: 'Manthan has send a message',
-                  profileIcon:
-                      'https://unsplash.com/photos/a-man-running-up-a-mountain-with-a-sky-background-gj7WgSOIIu4',
-                );
-              },
-              child: const Text('Chat Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.createIndeterminateProgressNotification(1000);
-              },
-              child: const Text('Simple Progress Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.showDownloadProgressNotification(100);
-              },
-              child: const Text('Download Progress Notification')),
-          ElevatedButton(
-              onPressed: () {
-                LocalNotification.showEmojiNotification(99);
-              },
-              child: const Text('Emojis Notification')),
+              child: const Text('Local Notification')),
 
+          /// Remote Notification
           ElevatedButton(
-              onPressed: () async {
-
-                await Future.delayed(const Duration(seconds: 10),(){
-                  LocalNotification.showWakeUpNotification(98);
-                });
-
+              onPressed: () {
+                MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+                    builder: (_) => const RemoteNotificationScreen()));
               },
-              child: const Text('Wakeup Notification')),
+              child: const Text('Remote Notification')),
+
+          /// Media Notification
+          ElevatedButton(
+              onPressed: () {
+                MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+                    builder: (_) => const RemoteNotificationScreen()));
+              },
+              child: const Text('Media Notification')),
         ],
       ),
     );
