@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   awesome_notifications: 0.8.2
   fluttertoast: 8.2.4
+  awesome_notifications_fcm: 0.8.0
 
 dev_dependencies:
   flutter_test:

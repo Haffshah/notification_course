@@ -115,4 +115,111 @@ class LocalNotification {
               key: 'READ', label: 'Mark as Read', autoDismissible: true),
         ]);
   }
+
+  /// Progress Bar Notification
+  static Future<void> createIndeterminateProgressNotification(int id) async {
+    /// Fake Download
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: id,
+            channelKey: notificationChannelKey,
+            title: 'Downloading file',
+            body: 'FileName.txt',
+            category: NotificationCategory.Progress,
+            payload: {'file': 'FileName.txt'},
+            progress: null,
+            locked: true,
+            notificationLayout: NotificationLayout.ProgressBar));
+
+    /// Fake Download Complete
+    Future.delayed(const Duration(seconds: 5), () async {
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+        id: id,
+        channelKey: notificationChannelKey,
+        title: 'Downloading finished',
+        body: 'FileName.txt',
+        category: NotificationCategory.Progress,
+        locked: false,
+      ));
+    });
+  }
+
+  /// Download Progress Notification Start
+  static int currentStep = 0;
+
+  static Future<void> showDownloadProgressNotification(int id) async {
+    int maxStep = 10;
+
+    for (int simulatedStep = 1; simulatedStep <= maxStep + 1; simulatedStep++) {
+      currentStep = simulatedStep;
+      await Future.delayed(const Duration(seconds: 1));
+      _updateCurrentProgressBar(
+          id: id, simulatedStep: currentStep, maxStep: maxStep);
+    }
+  }
+
+  static void _updateCurrentProgressBar(
+      {required int id,
+      required int simulatedStep,
+      required int maxStep}) async {
+    /// To show Complete Notification
+    if (simulatedStep > maxStep) {
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+        id: id,
+        channelKey: notificationChannelKey,
+        title: 'Downloading finished',
+        body: 'FileName.txt',
+        category: NotificationCategory.Progress,
+        locked: false,
+      ));
+    }
+
+    /// Show Progress
+    else {
+      int progress = min((simulatedStep / maxStep * 100).round(), 100);
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: id,
+              channelKey: notificationChannelKey,
+              title: 'Downloading file ($progress%)',
+              body: 'FileName.txt',
+              category: NotificationCategory.Progress,
+              payload: {'file': 'FileName.txt'},
+              progress: progress,
+              locked: true,
+              notificationLayout: NotificationLayout.ProgressBar));
+    }
+  }
+
+  /// Download Progress Notification End
+
+  /// Emoji Notification
+  static Future<void> showEmojiNotification(int id) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+      id: id,
+      channelKey: notificationChannelKey,
+      title:
+          'Emojis Are Awesome! 🤪🥳😇 ${Emojis.activites_admission_tickets} ${Emojis.science_dna}',
+      body: 'Emojis are emotions on face ${Emojis.activites_carp_streamer}',
+      category: NotificationCategory.Social,
+    ));
+  }
+
+
+
+  /// Wakeup Notification will Wake up Lock Screen
+  static Future<void> showWakeUpNotification(int id) async{
+    await AwesomeNotifications().createNotification(content: NotificationContent(
+      id: id,
+      channelKey: notificationChannelKey,
+      title:
+      'Wakeup Notification',
+      body: 'Wakeup you lazy boy!',
+      wakeUpScreen: true
+    ));
+
+  }
 }

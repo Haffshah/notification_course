@@ -105,6 +105,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Text('Chat Notification')),
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.createIndeterminateProgressNotification(1000);
+              },
+              child: const Text('Simple Progress Notification')),
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.showDownloadProgressNotification(100);
+              },
+              child: const Text('Download Progress Notification')),
+          ElevatedButton(
+              onPressed: () {
+                LocalNotification.showEmojiNotification(99);
+              },
+              child: const Text('Emojis Notification')),
+
+          ElevatedButton(
+              onPressed: () async {
+
+                await Future.delayed(const Duration(seconds: 10),(){
+                  LocalNotification.showWakeUpNotification(98);
+                });
+
+              },
+              child: const Text('Wakeup Notification')),
         ],
       ),
     );
