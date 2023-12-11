@@ -39,9 +39,10 @@ dependencies:
 
   # Awesome plugins
   awesome_notifications: 0.8.2
-  awesome_notifications_fcm: 0.8.0
+#  awesome_notifications_fcm: 0.8.0
   # Firebase plugins
-  firebase_core: 2.24.0
+  firebase_core: 2.24.2
+  firebase_messaging: 14.7.8
 
 
 dev_dependencies:

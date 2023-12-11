@@ -50,9 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
       AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
         if (!isAllowed) {
           AwesomeNotifications().requestPermissionToSendNotifications();
+
+
         }
       });
-      NotificationController.requestFirebaseToken();
+      /// Request Form Awesome Notification FCM
+      // NotificationController.requestFirebaseToken();
+      /// Request Token From FirebaseMessaging
+      NotificationController().getFcmToken();
+
     });
   }
 

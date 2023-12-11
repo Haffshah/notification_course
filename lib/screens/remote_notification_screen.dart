@@ -20,13 +20,13 @@ class RemoteNotificationScreen extends StatelessWidget {
         children: [
           ElevatedButton(
               onPressed: () {
-                NotificationController.subscribeToTopic('FlutterNewsletter');
+                // NotificationController.subscribeToTopic('FlutterNewsletter');
               },
               child: const Text('Subscribe to Topic')),
 
           ElevatedButton(
               onPressed: () {
-                NotificationController.unsubscribeToTopic('FlutterNewsletter');
+                // NotificationController.unsubscribeToTopic('FlutterNewsletter');
               },
               child: const Text('Unsubscribe to Topic')),
 

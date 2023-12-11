@@ -1,14 +1,21 @@
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
+
+// import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notification_course/constant/app_constant.dart';
 import 'package:notification_course/main.dart';
 import 'package:notification_course/screens/local_notification_screen.dart';
 import 'package:notification_course/services/local_notification.dart';
+
+/// Background Message Handler
+Future<void> _bgMessageHandler(RemoteMessage remoteMessage) async {
+  print('On Background Message Received ${remoteMessage.toMap()}');
+}
 
 /// Navigation
 navigationAction(ReceivedAction receivedAction) {
@@ -28,12 +35,15 @@ class NotificationController with ChangeNotifier {
     return _instance;
   }
 
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
   NotificationController._internal();
 
   /// Get Initialize all the Methods required
   static Future<void> getStartedWithNotification() async {
     NotificationController.initializeLocalNotification(debug: true);
     NotificationController.initializeRemoteNotification(debug: true);
+    NotificationController.initializeFirebaseRemoteNotification();
     NotificationController.initializeNotificationForEventListeners();
     NotificationController.getInitialNotificationAction();
   }
@@ -86,15 +96,15 @@ class NotificationController with ChangeNotifier {
   /// Initialization Method
   static Future<void> initializeRemoteNotification(
       {required bool debug}) async {
-    await Firebase.initializeApp(
-        options: NotificationController.setFirebaseOption());
+    // await Firebase.initializeApp(
+    //     options: NotificationController.setFirebaseOption());
 
-    await AwesomeNotificationsFcm().initialize(
-        onFcmTokenHandle: NotificationController.myFcmTokenHandle,
-        onFcmSilentDataHandle: NotificationController.mySilentDataHandle,
-        onNativeTokenHandle: NotificationController.myNativeTokenHandle,
-        licenseKeys: [],
-        debug: debug);
+    // await AwesomeNotificationsFcm().initialize(
+    //     onFcmTokenHandle: NotificationController.myFcmTokenHandle,
+    //     onFcmSilentDataHandle: NotificationController.mySilentDataHandle,
+    //     onNativeTokenHandle: NotificationController.myNativeTokenHandle,
+    //     licenseKeys: [],
+    //     debug: debug);
   }
 
   /// Event Listeners
@@ -148,7 +158,7 @@ class NotificationController with ChangeNotifier {
         backgroundColor: Colors.amber);
   }
 
-  /// Notification Displaed Method
+  /// Notification Displayed Method
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
     debugPrint('Notification Displayed');
@@ -202,75 +212,105 @@ class NotificationController with ChangeNotifier {
   /// Remote Notification Event Listeners
   /// Use this method to execute on background when a silent data arrives
   /// (even While Terminated)
-  static Future<void> mySilentDataHandle(FcmSilentData fcmSilentData) async {
-    Fluttertoast.showToast(
-        msg: 'Silent Data Received',
-        toastLength: Toast.LENGTH_SHORT,
-        fontSize: 16,
-        backgroundColor: Colors.amber);
-
-    if (fcmSilentData.data!['IsLiveScore'] == 'true') {
-      LocalNotification.createLiveScoreNotification(
-          id: 1,
-          title: fcmSilentData.data!['title']!,
-          body: fcmSilentData.data!['body']!,
-          largeIcon: fcmSilentData.data!['largeIcon']!);
-    }
-
-    debugPrint('"Silent Data" : ${fcmSilentData.data}');
-    if (fcmSilentData.createdLifeCycle == NotificationLifeCycle.Foreground) {
-      debugPrint('Foreground');
-    } else {
-      debugPrint('Background');
-    }
-  }
+  // static Future<void> mySilentDataHandle(FcmSilentData fcmSilentData) async {
+  //   Fluttertoast.showToast(
+  //       msg: 'Silent Data Received',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       fontSize: 16,
+  //       backgroundColor: Colors.amber);
+  //
+  //   if (fcmSilentData.data!['IsLiveScore'] == 'true') {
+  //     LocalNotification.createLiveScoreNotification(
+  //         id: 1,
+  //         title: fcmSilentData.data!['title']!,
+  //         body: fcmSilentData.data!['body']!,
+  //         largeIcon: fcmSilentData.data!['largeIcon']!);
+  //   }
+  //
+  //   debugPrint('"Silent Data" : ${fcmSilentData.data}');
+  //   if (fcmSilentData.createdLifeCycle == NotificationLifeCycle.Foreground) {
+  //     debugPrint('Foreground');
+  //   } else {
+  //     debugPrint('Background');
+  //   }
+  // }
 
   /// FCM Token handle
-  static Future<void> myFcmTokenHandle(String token) async {
-    Fluttertoast.showToast(
-        msg: 'FCM token received',
-        toastLength: Toast.LENGTH_SHORT,
-        fontSize: 16,
-        backgroundColor: Colors.amber);
-
-    debugPrint('"FCM Token" : $token');
-  }
+  // static Future<void> myFcmTokenHandle(String token) async {
+  //   Fluttertoast.showToast(
+  //       msg: 'FCM token received',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       fontSize: 16,
+  //       backgroundColor: Colors.amber);
+  //
+  //   debugPrint('"FCM Token" : $token');
+  // }
 
   /// Native Token handle
-  static Future<void> myNativeTokenHandle(String token) async {
-    Fluttertoast.showToast(
-        msg: 'Native token received',
-        toastLength: Toast.LENGTH_SHORT,
-        fontSize: 16,
-        backgroundColor: Colors.amber);
-
-    debugPrint('"Native Token" : $token');
-  }
+  // static Future<void> myNativeTokenHandle(String token) async {
+  //   Fluttertoast.showToast(
+  //       msg: 'Native token received',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       fontSize: 16,
+  //       backgroundColor: Colors.amber);
+  //
+  //   debugPrint('"Native Token" : $token');
+  // }
 
   /// Request Firebase Token
-  static Future<String> requestFirebaseToken() async {
-    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      try {
-        return await AwesomeNotificationsFcm().requestFirebaseAppToken();
-      } catch (e, s) {
-        debugPrint('Exception $e\n Stacktrace $s');
-      }
-    } else {
-      debugPrint('Firebase is not available ');
-    }
-
-    return '';
-  }
-
+  // static Future<String> requestFirebaseToken() async {
+  //   if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
+  //     try {
+  //       return await AwesomeNotificationsFcm().requestFirebaseAppToken();
+  //     } catch (e, s) {
+  //       debugPrint('Exception $e\n Stacktrace $s');
+  //     }
+  //   } else {
+  //     debugPrint('Firebase is not available ');
+  //   }
+  //
+  //   return '';
+  // }
+  //
   /// Subscribe to Topic
-  static Future<void> subscribeToTopic(String topic) async {
-    await AwesomeNotificationsFcm().subscribeToTopic(topic);
-    debugPrint('Subscribe to Topic $topic');
+  // static Future<void> subscribeToTopic(String topic) async {
+  //   await AwesomeNotificationsFcm().subscribeToTopic(topic);
+  //   debugPrint('Subscribe to Topic $topic');
+  // }
+  //
+  /// Unsubscribe to Topic
+  // static Future<void> unsubscribeToTopic(String topic) async {
+  //   await AwesomeNotificationsFcm().unsubscribeToTopic(topic);
+  //   debugPrint('Unsubscribe to Topic $topic');
+  // }
+
+  ///======================== Firebase Notification ===========================///
+
+  static Future<void> initializeFirebaseRemoteNotification() async {
+    await Firebase.initializeApp(
+       options: NotificationController.setFirebaseOption());
+
+    /// For On Background and Terminated State
+    FirebaseMessaging.onBackgroundMessage(_bgMessageHandler);
+
+    /// Foreground State
+    FirebaseMessaging.onMessage.listen(onForegroundMessageReceived);
+
+    /// Calls when user taps on It.
+    FirebaseMessaging.onMessageOpenedApp.listen(onMessageOpenedApp);
   }
 
-  /// Unsubscribe to Topic
-  static Future<void> unsubscribeToTopic(String topic) async {
-    await AwesomeNotificationsFcm().unsubscribeToTopic(topic);
-    debugPrint('Unsubscribe to Topic $topic');
+  static Future<void> onForegroundMessageReceived(
+      RemoteMessage remoteMessage) async {
+    print('On Foreground Message Received ${remoteMessage.toMap()}');
+  }
+
+  static Future<void> onMessageOpenedApp(RemoteMessage remoteMessage) async {
+    print('On Tap of Received Message  ${remoteMessage.toMap()}');
+  }
+
+   getFcmToken() async {
+    final fcmToken = await firebaseMessaging.getToken();
+    print('FirebaseMessaging FCM $fcmToken');
   }
 }
