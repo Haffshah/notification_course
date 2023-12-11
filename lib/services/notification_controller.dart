@@ -209,7 +209,20 @@ class NotificationController with ChangeNotifier {
         fontSize: 16,
         backgroundColor: Colors.amber);
 
+    if (fcmSilentData.data!['IsLiveScore'] == 'true') {
+      LocalNotification.createLiveScoreNotification(
+          id: 1,
+          title: fcmSilentData.data!['title']!,
+          body: fcmSilentData.data!['body']!,
+          largeIcon: fcmSilentData.data!['largeIcon']!);
+    }
+
     debugPrint('"Silent Data" : ${fcmSilentData.data}');
+    if (fcmSilentData.createdLifeCycle == NotificationLifeCycle.Foreground) {
+      debugPrint('Foreground');
+    } else {
+      debugPrint('Background');
+    }
   }
 
   /// FCM Token handle
@@ -255,12 +268,9 @@ class NotificationController with ChangeNotifier {
     debugPrint('Subscribe to Topic $topic');
   }
 
-
-
   /// Unsubscribe to Topic
   static Future<void> unsubscribeToTopic(String topic) async {
     await AwesomeNotificationsFcm().unsubscribeToTopic(topic);
     debugPrint('Unsubscribe to Topic $topic');
   }
 }
-

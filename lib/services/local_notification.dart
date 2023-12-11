@@ -218,4 +218,19 @@ class LocalNotification {
             body: 'Wakeup you lazy boy!',
             wakeUpScreen: true));
   }
+
+  /// Create LiveScore Notification
+  static Future<void> createLiveScoreNotification(
+      {required int id,
+      required String title,
+      required String body,
+      String? largeIcon}) async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: id,
+            channelKey: notificationChannelKey,
+            body: body,
+            title: title,
+            largeIcon: largeIcon));
+  }
 }
