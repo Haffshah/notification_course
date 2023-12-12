@@ -1,10 +1,10 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 // import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notification_course/constant/app_constant.dart';
@@ -13,9 +13,9 @@ import 'package:notification_course/screens/local_notification_screen.dart';
 import 'package:notification_course/services/local_notification.dart';
 
 /// Background Message Handler
-Future<void> _bgMessageHandler(RemoteMessage remoteMessage) async {
-  print('On Background Message Received ${remoteMessage.toMap()}');
-}
+// Future<void> _bgMessageHandler(RemoteMessage remoteMessage) async {
+//   print('On Background Message Received ${remoteMessage.toMap()}');
+// }
 
 /// Navigation
 navigationAction(ReceivedAction receivedAction) {
@@ -35,7 +35,7 @@ class NotificationController with ChangeNotifier {
     return _instance;
   }
 
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   NotificationController._internal();
 
@@ -43,7 +43,7 @@ class NotificationController with ChangeNotifier {
   static Future<void> getStartedWithNotification() async {
     NotificationController.initializeLocalNotification(debug: true);
     NotificationController.initializeRemoteNotification(debug: true);
-    NotificationController.initializeFirebaseRemoteNotification();
+    // NotificationController.initializeFirebaseRemoteNotification();
     NotificationController.initializeNotificationForEventListeners();
     NotificationController.getInitialNotificationAction();
   }
@@ -81,17 +81,17 @@ class NotificationController with ChangeNotifier {
         debug: debug);
   }
 
-  ///Set Firebase Options
-  static setFirebaseOption() {
-    if (Platform.isAndroid) {
-      return const FirebaseOptions(
-        apiKey: 'AIzaSyB9zHnV2KeRtdB8Gr1L4Gr6AwFy5TGQilI',
-        appId: '1:616687156211:android:903430243b3f619b623086',
-        messagingSenderId: '616687156211',
-        projectId: 'push-notification-13736a',
-      );
-    }
-  }
+  // ///Set Firebase Options
+  // static setFirebaseOption() {
+  //   if (Platform.isAndroid) {
+  //     return const FirebaseOptions(
+  //       apiKey: 'AIzaSyB9zHnV2KeRtdB8Gr1L4Gr6AwFy5TGQilI',
+  //       appId: '1:616687156211:android:903430243b3f619b623086',
+  //       messagingSenderId: '616687156211',
+  //       projectId: 'push-notification-13736a',
+  //     );
+  //   }
+  // }
 
   /// Initialization Method
   static Future<void> initializeRemoteNotification(
@@ -285,32 +285,32 @@ class NotificationController with ChangeNotifier {
   // }
 
   ///======================== Firebase Notification ===========================///
-
-  static Future<void> initializeFirebaseRemoteNotification() async {
-    await Firebase.initializeApp(
-       options: NotificationController.setFirebaseOption());
-
-    /// For On Background and Terminated State
-    FirebaseMessaging.onBackgroundMessage(_bgMessageHandler);
-
-    /// Foreground State
-    FirebaseMessaging.onMessage.listen(onForegroundMessageReceived);
-
-    /// Calls when user taps on It.
-    FirebaseMessaging.onMessageOpenedApp.listen(onMessageOpenedApp);
-  }
-
-  static Future<void> onForegroundMessageReceived(
-      RemoteMessage remoteMessage) async {
-    print('On Foreground Message Received ${remoteMessage.toMap()}');
-  }
-
-  static Future<void> onMessageOpenedApp(RemoteMessage remoteMessage) async {
-    print('On Tap of Received Message  ${remoteMessage.toMap()}');
-  }
-
-   getFcmToken() async {
-    final fcmToken = await firebaseMessaging.getToken();
-    print('FirebaseMessaging FCM $fcmToken');
-  }
+  //
+  // static Future<void> initializeFirebaseRemoteNotification() async {
+  //   await Firebase.initializeApp(
+  //      options: NotificationController.setFirebaseOption());
+  //
+  //   /// For On Background and Terminated State
+  //   FirebaseMessaging.onBackgroundMessage(_bgMessageHandler);
+  //
+  //   /// Foreground State
+  //   FirebaseMessaging.onMessage.listen(onForegroundMessageReceived);
+  //
+  //   /// Calls when user taps on It.
+  //   FirebaseMessaging.onMessageOpenedApp.listen(onMessageOpenedApp);
+  // }
+  //
+  // static Future<void> onForegroundMessageReceived(
+  //     RemoteMessage remoteMessage) async {
+  //   print('On Foreground Message Received ${remoteMessage.toMap()}');
+  // }
+  //
+  // static Future<void> onMessageOpenedApp(RemoteMessage remoteMessage) async {
+  //   print('On Tap of Received Message  ${remoteMessage.toMap()}');
+  // }
+  //
+  //  getFcmToken() async {
+  //   final fcmToken = await firebaseMessaging.getToken();
+  //   print('FirebaseMessaging FCM $fcmToken');
+  // }
 }

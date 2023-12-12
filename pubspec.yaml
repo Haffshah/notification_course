@@ -39,11 +39,17 @@ dependencies:
 
   # Awesome plugins
   awesome_notifications: 0.8.2
-#  awesome_notifications_fcm: 0.8.0
-  # Firebase plugins
-  firebase_core: 2.24.2
-  firebase_messaging: 14.7.8
+# awesome_notifications_fcm: 0.8.0
+#  Firebase plugins
+# firebase_core: 2.24.2
+# firebase_messaging: 14.7.8
 
+# Media Service
+  audio_service: 0.18.8
+  just_audio: 0.9.30
+# Progress Bar
+  audio_video_progress_bar: 0.11.0
+  get_it: 7.2.0
 
 dev_dependencies:
   flutter_test:
