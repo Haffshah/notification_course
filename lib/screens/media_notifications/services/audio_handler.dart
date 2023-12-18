@@ -19,6 +19,8 @@ class MyAudioHandler extends BaseAudioHandler {
   MyAudioHandler() {
     _loadEmptyPlayList();
     _notifyAudioHandlerAboutPlaybackEvents();
+    _listenForDurationChanges();
+    _listenForCurrentSongIndexChanges();
   }
 
   Future<void> _loadEmptyPlayList() async {
@@ -51,6 +53,21 @@ class MyAudioHandler extends BaseAudioHandler {
   @override
   Future<void> pause() => _player.pause();
 
+  @override
+  Future<void> seek(Duration position) => _player.seek(position);
+
+  @override
+  Future<void> skipToPrevious() => _player.seekToPrevious();
+
+  @override
+  Future<void> skipToNext() => _player.seekToNext();
+
+  @override
+  Future<void> stop() async {
+    await _player.dispose();
+    return super.stop();
+  }
+
   void _notifyAudioHandlerAboutPlaybackEvents() {
     _player.playbackEventStream.listen((event) {
       final playing = _player.playing;
@@ -82,6 +99,32 @@ class MyAudioHandler extends BaseAudioHandler {
           bufferedPosition: _player.bufferedPosition,
           queueIndex: event.currentIndex,
           speed: _player.speed));
+    });
+  }
+
+  void _listenForDurationChanges() {
+    _player.durationStream.listen((duration) {
+      final index = _player.currentIndex;
+
+      final newQueue = queue.value;
+      if (index == null || newQueue.isEmpty) return;
+
+      final oldMediaItem = newQueue[index];
+      final newMediaItem = oldMediaItem.copyWith(duration: duration);
+      newQueue[index] = newMediaItem;
+
+      queue.add(newQueue);
+      mediaItem.add(newMediaItem);
+    });
+  }
+
+  void _listenForCurrentSongIndexChanges() {
+    _player.currentIndexStream.listen((index) {
+      final playlist = queue.value;
+
+      if (index == null || playlist.isEmpty) return;
+
+      mediaItem.add(playlist[index]);
     });
   }
 }
